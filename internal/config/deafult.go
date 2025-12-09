@@ -1,5 +1,9 @@
 package config
 
+import (
+	"os"
+)
+
 const (
 	//  Limits
 	DefaultHistorySize = 1000
@@ -23,4 +27,10 @@ const (
 	//  Config Filenames
 	DefaultConfigFile  = ".gshrc"
 	DefaultHistoryFile = "history"
+)
+
+var (
+	DefaultStdin  = os.Stdin.Fd()
+	DefaultStdout = os.Stdout.Fd()
+	DefaultStderr = os.Stderr.Fd()
 )
