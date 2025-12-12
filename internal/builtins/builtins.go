@@ -11,11 +11,12 @@ type ShellContext interface {
 }
 
 var Builtins = map[string]func(sh ShellContext, c command.Command) error{
-	"echo":  Echo,
-	"help":  Help,
-	"exit":  Exit,
-	"pwd":   Pwd,
-	"clear": Clear,
-	"cd":    Cd,
-	"ls":    Ls,
+	"echo":   Echo,
+	"help":   Help,
+	"exit":   Exit,
+	"pwd":    Pwd,
+	"clear":  Clear,
+	"cd":     Cd,
+	"ls":     Ls,
+	"whoami": Whoami,
 }

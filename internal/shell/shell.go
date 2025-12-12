@@ -4,11 +4,12 @@ import (
 	cmd "gsh/internal/command"
 	cfg "gsh/internal/config"
 	"os"
+	"os/user"
 )
 
 type Shell struct {
 	name       string
-	user       string
+	user       *user.User
 	currentDir string
 	rawInput   string
 	command    cmd.Command
@@ -44,9 +45,10 @@ func (s *Shell) GetConfig() interface{} {
 
 func NewShell(config *cfg.Config) *Shell {
 	dir, _ := os.Getwd()
+	user, _ := user.Current()
 	return &Shell{
 		name:       DefaultShellName,
-		user:       "user",
+		user:       user,
 		currentDir: dir,
 		env:        make(map[string]string),
 		config:     config,

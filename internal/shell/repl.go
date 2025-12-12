@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
 
 	blt "gsh/internal/builtins"
 	cmd "gsh/internal/command"
@@ -50,9 +52,30 @@ func (shell *Shell) eval() int8 {
 			fmt.Print(err)
 		}
 	} else {
-		return shell.errorHandler(COMMAND_NOT_FOUND)
+		if err := shell.executeExternalCommand(cmnd); err != nil {
+			return shell.errorHandler(COMMAND_NOT_FOUND)
+		}
 	}
 	return 0
+}
+
+func (shell *Shell) executeExternalCommand(cmnd cmd.Command) error {
+	cmdPath := filepath.Join("/bin/", cmnd.Base())
+
+	if _, err := os.Stat(cmdPath); os.IsNotExist(err) {
+		return fmt.Errorf("command not found")
+	}
+
+	command := exec.Command(cmdPath, cmnd.Args()...)
+	command.Stdout = os.Stdout
+	command.Stderr = os.Stderr
+	command.Stdin = os.Stdin
+
+	if err := command.Run(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (shell *Shell) errorHandler(err int8) int8 {
